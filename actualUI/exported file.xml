@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nrml xmlns="http://openquake.org/xmlns/nrml/0.4" xmlns:gml="http://www.opengis.net/gml">
+   <logicTree logicTreeID="lt1">
+      <logicTreeBranchingLevel branchingLevelID="bl1">
+         <logicTreeBranchSet applyToTectonicRegionType="anything" branchSetID="bs1" uncertaintyType="gmpeModel">
+            <logicTreeBranch branchSetID="b11">
+               <uncertaintyModel gmpe_table="anything">GMPETable</uncertaintyModel>
+               <uncertaintyWeight>0.5</uncertaintyWeight>
+            </logicTreeBranch>
+         </logicTreeBranchSet>
+      </logicTreeBranchingLevel>
+      <logicTreeBranchingLevel branchingLevelID="bl2">
+         <logicTreeBranchSet applyToTectonicRegionType="something different" branchSetID="bs2" uncertaintyType="gmpeModel">
+            <logicTreeBranch branchSetID="b21">
+               <uncertaintyModel gmpe_table="test">GMPETable</uncertaintyModel>
+               <uncertaintyWeight>0.3</uncertaintyWeight>
+            </logicTreeBranch>
+         </logicTreeBranchSet>
+      </logicTreeBranchingLevel>
+   </logicTree>
+</nrml>
