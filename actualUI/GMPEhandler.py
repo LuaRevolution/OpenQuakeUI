@@ -87,10 +87,14 @@ ltData = { #Default ltData
 }
 
 
+
 def parseOut(Data):
     es = ""
     for x in range(0,len(Data)): #Parse the Branch Sets!!!
-        x=x+1
+        if len(Data) != 0:
+            #print(len(Data))
+            x=x+1
+
         curBlock = Data[x]
         bsData2 = curBlock["bsData"][x]
         es = es+"\n Branch Set "+str(x)+" (Branch Set ID:  "+bsData2["branchSetID"]+") (Branching Level ID: "+curBlock["branchingLevelID"]+") (Tectonic Region Type: "+bsData2["applyToTectonicRegionType"]+")"
@@ -101,7 +105,166 @@ def parseOut(Data):
         print(es)
     pToOutput(es)
 
+
+def deleteFunc(BoS, bsid, blid):
+    if BoS == "branch":
+        for a in range(0,len(bsData)):
+            a = a + 1
+            #print(a)
+            curBranch = bsData[a]
+            if curBranch["branchSetID"] == bsid:
+                del(bsData[a])
+                del(ltBranch[a])
+                del(ltData[a])
+                #print(bsData)
+                #print(ltBranch)
+                parseOut(ltData)
+
+
 #POPUP WINDOW
+def deletePopup(): #Deletetion POPUP
+        _bgcolor = '#d9d9d9'  # X11 color: 'gray85'
+        _fgcolor = '#000000'  # X11 color: 'black'
+        _compcolor = '#d9d9d9' # X11 color: 'gray85'
+        _ana1color = '#d9d9d9' # X11 color: 'gray85'
+        _ana2color = '#d9d9d9' # X11 color: 'gray85'
+        style = ttk.Style()
+        if sys.platform == "win32":
+            style.theme_use('winnative')
+        style.configure('.',background=_bgcolor)
+        style.configure('.',foreground=_fgcolor)
+        style.configure('.',font="TkDefaultFont")
+        style.map('.',background=
+            [('selected', _compcolor), ('active',_ana2color)])
+        top = tk.Tk()
+        top.geometry("425x130+789+438")
+        top.title("Delete ...")
+        top.configure(background="#d9d9d9")
+        top.configure(highlightbackground="#d9d9d9")
+        top.configure(highlightcolor="black")
+
+
+
+        blIDtxt = ttk.Label(top)
+        blIDtxt.place(relx=0.01, rely=0.31, height=19, width=136)
+        blIDtxt.configure(background="#d9d9d9")
+        blIDtxt.configure(foreground="#000000")
+        blIDtxt.configure(font="TkDefaultFont")
+        blIDtxt.configure(relief=FLAT)
+        blIDtxt.configure(text='''Set/Branch ID''')
+
+        blIDbox = ttk.Entry(top)
+        blIDbox.place(relx=0.54, rely=0.31, relheight=0.15, relwidth=0.45)
+        blIDbox.configure(takefocus="")
+        blIDbox.configure(cursor="ibeam")
+
+
+        BorSVar = tk.IntVar()
+        BorSVar.set(1)
+
+        def sbBor():
+            BorSVar.set(0)
+            #print(BorSVar.get())
+        def bbBor():
+            BorSVar.set(1)
+            #print(BorSVar.get())
+
+
+        SetButton = tk.Radiobutton(top,
+            value=0,
+            variable=BorSVar,
+            command=sbBor,
+            activebackground="#d9d9d9",
+            activeforeground="#000000",
+            background="#d9d9d9",
+            disabledforeground="#a3a3a3",
+            foreground="#000000",
+            highlightbackground="#d9d9d9",
+            highlightcolor="black",
+            justify=LEFT,
+            text="Set"
+        )
+        SetButton.place(relx=0.54, rely=0.08, relheight=0.19, relwidth=0.1)
+
+
+
+        BranchButton = tk.Radiobutton(top,
+            value=1,
+            variable=BorSVar,
+            command=bbBor,
+            activebackground="#d9d9d9",
+            activeforeground="#000000",
+            background="#d9d9d9",
+            disabledforeground="#a3a3a3",
+            foreground="#000000",
+            highlightbackground="#d9d9d9",
+            highlightcolor="black",
+            justify=LEFT,
+            text="Branch"
+        )
+        BranchButton.place(relx=0.82, rely=0.08, relheight=0.19, relwidth=0.15)
+
+
+        def dele():
+            print("FOR BURGER??")
+            print(BorSVar.get())
+            if BorSVar.get() == 1:
+                print("1")
+                deleteFunc("branch", blIDbox.get(), "")
+            elif BorSVar.get() == 0:
+                print("0")
+                deleteFunc("set", blIDbox.get(), blIDbox_2.get())
+
+        def onClick():
+            dele()
+            top.destroy()
+
+        createButton = Button(top)
+        createButton.place(relx=0.39, rely=0.77, height=25, width=90)
+        createButton.configure(activebackground="#d9d9d9")
+        createButton.configure(activeforeground="#000000")
+        createButton.configure(background="#d9d9d9")
+        createButton.configure(disabledforeground="#a3a3a3")
+        createButton.configure(foreground="#000000")
+        createButton.configure(highlightbackground="#d9d9d9")
+        createButton.configure(highlightcolor="black")
+        createButton.configure(pady="0")
+        createButton.configure(relief=GROOVE)
+        createButton.configure(command=onClick)
+        createButton.configure(text='''Delete''')
+
+        def onClick():
+            dele()
+            top.destroy()
+
+
+        SorB = ttk.Label(top)
+        SorB.place(relx=0.01, rely=0.08, height=19, width=136)
+        SorB.configure(background="#d9d9d9")
+        SorB.configure(foreground="#000000")
+        SorB.configure(font="TkDefaultFont")
+        SorB.configure(relief=FLAT)
+        SorB.configure(text='''Set or Branch''')
+
+
+
+
+
+        blIDtxt_1 = ttk.Label(top)
+        blIDtxt_1.place(relx=0.01, rely=0.54, height=19, width=200)
+        blIDtxt_1.configure(background="#d9d9d9")
+        blIDtxt_1.configure(foreground="#000000")
+        blIDtxt_1.configure(font="TkDefaultFont")
+        blIDtxt_1.configure(relief=FLAT)
+        blIDtxt_1.configure(text='''Branch ID (Ignore if deleting set)''')
+
+        blIDbox_2 = ttk.Entry(top)
+        blIDbox_2.place(relx=0.54, rely=0.54, relheight=0.15, relwidth=0.45)
+
+        blIDbox_2.configure(takefocus="")
+        blIDbox_2.configure(cursor="ibeam")
+
+
 def nbsPopup(): #New Branch Set Popup Window
         _bgcolor = '#d9d9d9'  # X11 color: 'gray85'
         _fgcolor = '#000000'  # X11 color: 'black'
@@ -317,7 +480,7 @@ def deleteObject(type, obj):
 def setoutput(var):
     global output
     output = var
-    print('ran?')
+    #print('ran?')
 class GMPE_File_Editor:
     #newBranchSet("bs1", "test", "bl1")
     #newBranch("bs1", "test", "0.2")
@@ -390,6 +553,7 @@ class GMPE_File_Editor:
         self.nBbutton_2.place(relx=0.38, rely=0.84, height=55, width=146)
         self.nBbutton_2.configure(takefocus="")
         self.nBbutton_2.configure(text='''Delete''')
+        self.nBbutton_2.configure(command=lambda: deletePopup())
 
         self.Label1 = Label(top)
         self.Label1.place(relx=0.38, y=15, height=25, width=144)
