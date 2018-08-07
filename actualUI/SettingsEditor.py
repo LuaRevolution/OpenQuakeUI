@@ -527,6 +527,46 @@ def setoutput(var):
 
 
 
+specY = 25
+numMade = 0
+
+atxtbox = {}
+ifPreset = 1
+
+v = {
+    #general
+    1: {"description": ""},
+    2: {"calculation_mode": ""},
+    3: {"random_seed": ""},
+    #geometry
+    4: {"sites_csv": ""},
+    #logic_tree
+    5: {"number_of_logic_tree_samples": ""},
+    #Erf
+    6: {"rupture_mesh_spacing": ""},
+    7: {"width_of_mfd_bin": ""},
+    8: {"area_source_discretization": ""},
+    #site_params
+    9: {"reference_vs30_type": ""},
+    10: {"reference_vs30_value": ""},
+    11: {"reference_depth_to_2pt5km_per_sec": ""},
+    12: {"reference_depth_to_1pt0km_per_sec": ""},
+    #calculation
+    13: {"source_model_logic_tree_file": ""},
+    14: {"gsim_logic_tree_file": ""},
+    15: {"investigation_time": ""},
+    16: {"intensity_measure_types_and_levels": ""},
+    17: {"truncation_level": ""},
+    18: {"maximum_distance": ""},
+    #output
+    19: {"export_dir": ""},
+    20: {"mean_hazard_curves": ""},
+    21: {"quantile_hazard_curves": ""},
+    22: {"hazard_maps": ""},
+    23: {"uniform_hazard_spectra": ""},
+    24: {"poes": ""}
+}
+
 
 
 
@@ -553,6 +593,7 @@ class Settings_Editor:
         top.configure(background="#d9d9d9")
         top.configure(highlightbackground="#d9d9d9")
         top.configure(highlightcolor="black")
+        top.resizable(False, False)
 
         def export(data):
             toExp = json.dumps(json.dumps(ltData))
@@ -561,6 +602,15 @@ class Settings_Editor:
                 return 0
             top.filename = top.filename+".xml"
             os.system('python ../gmpe-handler.py -output "'+top.filename+'" -ltd '+toExp)
+
+
+        def tab_changed(event):
+            curTab = self.notebook.index("current")
+            if curTab == 1:
+                top.geometry("670x650")
+
+            else:
+                top.geometry("600x448")
 
 
         self.style.configure('TNotebook.Tab', background=_bgcolor)
@@ -572,10 +622,13 @@ class Settings_Editor:
         self.notebook_t0 = Frame(self.notebook)
         self.notebook.add(self.notebook_t0, padding=3)
         self.notebook.tab(0, text="GMPE Logic Tree", compound="left"
-                ,underline="-1", )
+                ,underline="-1",)
+        self.notebook.bind("<<NotebookTabChanged>>", tab_changed)
+
         self.notebook_t0.configure(background="#d9d9d9")
         self.notebook_t0.configure(highlightbackground="#d9d9d9")
         self.notebook_t0.configure(highlightcolor="black")
+
         self.notebook_t1 = Frame(self.notebook)
         self.notebook.add(self.notebook_t1, padding=3)
         self.notebook.tab(1, text="Job.ini",compound="left",underline="-1",)
@@ -657,8 +710,69 @@ class Settings_Editor:
         self.delete.configure(text='''Delete''')
         self.delete.configure(command=lambda: deletePopup())
 
+        def send(t): #on click
+            global v
+            global atxtbox
+            cmdString = "python ../job-handler.py "
+            for x in range(0,len(v)):
+                x=x+1
+                curTab = v[x]
+                for z in curTab:
+                    curBox = atxtbox[z]
+                    txt = curBox.get()
+                    print("Val -> "+z+": "+txt)
+                    if txt == "":
+
+                        cmdString = cmdString+'-'+z+' " " '
+                    else:
+                        cmdString = cmdString+'-'+z+' "'+txt+'" '
+            cmdString = cmdString+'-outputFile "'+filedialog.asksaveasfilename(initialdir = "/",title = "Select file",filetypes = (("INI file","*.ini"), ("all files","*.*")))+'.ini" '
+            print(cmdString)
+            os.system(cmdString)
 
 
+
+        self.Save = Button(self.notebook_t1)
+        self.Save.place(relx=0.0, rely=0.0, height=25, relwidth=1)
+        self.Save.configure(activebackground="#0ba30d")
+        self.Save.configure(activeforeground="white")
+        self.Save.configure(activeforeground="#0ba30d")
+        self.Save.configure(background="#0ba30d")
+        self.Save.configure(disabledforeground="#a3a3a3")
+        self.Save.configure(foreground="#000000")
+        self.Save.configure(highlightbackground="#000000")
+        self.Save.configure(highlightcolor="#000000")
+        self.Save.configure(pady="0")
+        self.Save.configure(relief=FLAT)
+        self.Save.configure(text='''Save''')
+        self.Save.configure(width=380)
+        self.Save.bind("<Button-1>", send)
+        global preset
+        numMade = 0
+        for z in range(0,len(v)):
+            print("Z -> "+str(z))
+            z = z+1
+            curTab = v[z]
+            for key in curTab:
+                global numMade
+                specY = z * 25
+                self.TLabel1 = ttk.Label(self.notebook_t1)
+                self.TLabel1.place(relx=0.0, y=specY, height=25, width=200)
+                self.TLabel1.configure(background="#d9d9d9")
+                self.TLabel1.configure(foreground="#000000")
+                self.TLabel1.configure(font="TkDefaultFont")
+                self.TLabel1.configure(relief=FLAT)
+                self.TLabel1.configure(text=key)
+                self.TLabel1.configure(wraplength="200")
+                self.TEntry1 = ttk.Entry(self.notebook_t1)
+                self.TEntry1.place(relx=0.4, y=specY, height=25, relwidth=0.6)
+                self.TEntry1.configure(takefocus="")
+                self.TEntry1.configure(width=405)
+                self.TEntry1.configure(cursor="ibeam")
+                self.TEntry1.configure(textvariable=curTab[key])
+                atxtbox[key] = self.TEntry1
+                numMade = numMade + 1
+                specY = specY + 25
 
 
 # The following code is added to facilitate the Scrolled widgets you specified.
