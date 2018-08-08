@@ -104,11 +104,6 @@ ltData = { #Default ltData
 
 
 
-
-
-
-
-
 def parseOut(Data):
     es = ""
     for x in range(0,len(Data)): #Parse the Branch Sets!!!
@@ -734,27 +729,25 @@ class Settings_Editor:
 
         self.Save = Button(self.notebook_t1)
         self.Save.place(relx=0.0, rely=0.0, height=25, relwidth=1)
-        self.Save.configure(activebackground="#0ba30d")
-        self.Save.configure(activeforeground="white")
-        self.Save.configure(activeforeground="#0ba30d")
-        self.Save.configure(background="#0ba30d")
-        self.Save.configure(disabledforeground="#a3a3a3")
+        self.Save.configure(activebackground="#bababa")
+
+        self.Save.configure(background="#bababa")
+        self.Save.configure(disabledforeground="#bababa")
         self.Save.configure(foreground="#000000")
         self.Save.configure(highlightbackground="#000000")
         self.Save.configure(highlightcolor="#000000")
         self.Save.configure(pady="0")
         self.Save.configure(relief=FLAT)
-        self.Save.configure(text='''Save''')
+        self.Save.configure(text='''Export''')
         self.Save.configure(width=380)
         self.Save.bind("<Button-1>", send)
         global preset
         numMade = 0
         for z in range(0,len(v)):
-            print("Z -> "+str(z))
+            #print("Z -> "+str(z))
             z = z+1
             curTab = v[z]
             for key in curTab:
-                global numMade
                 specY = z * 25
                 self.TLabel1 = ttk.Label(self.notebook_t1)
                 self.TLabel1.place(relx=0.0, y=specY, height=25, width=200)
